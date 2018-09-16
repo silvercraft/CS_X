@@ -39,7 +39,7 @@ while(0<1){
     }
   }else{
     print("Now is player B's turn!")
-    m=readline("Player A input(1~9) :")
+    m=readline("Player B input(1~9) :")
     if(m=="exit"){
       print("bye-bye")
       break
@@ -55,7 +55,7 @@ while(0<1){
     }
   }
   
-  for(i in 1:n/3+1){
+  for(i in 1:n/4+1){
     for(j in 1:n%%4){
       if(wturn==0){
         map[i,j]=1
@@ -71,8 +71,62 @@ while(0<1){
   print(paste(s[4],"|",s[5],"|",s[6]))
   print("_____")
   print(paste(s[7],"|",s[8],"|",s[9]))
+  if(s[1]=="O"&&s[2]=="O"&&s[3]=="O"){
+    print("A wins!")
+    break
+  }else if(s[4]=="O"&&s[5]=="O"&&s[6]=="O"){
+    print("A wins!")
+    break
+  }else if(s[7]=="O"&&s[8]=="O"&&s[9]=="O"){
+    print("A wins!")
+    break
+  }else if(s[1]=="O"&&s[5]=="O"&&s[9]=="O"){
+    print("A wins!")
+    break
+  }else if(s[3]=="O"&&s[5]=="O"&&s[7]=="O"){
+    print("A wins!")
+    break
+  }else if(s[1]=="O"&&s[4]=="O"&&s[7]=="O"){
+    print("A wins!")
+    break
+  }else if(s[2]=="O"&&s[5]=="O"&&s[8]=="O"){
+    print("A wins!")
+    break
+  }else if(s[3]=="O"&&s[6]=="O"&&s[9]=="O"){
+    print("A wins!")
+    break
+  }else if(s[1]=="X"&&s[5]=="X"&&s[9]=="X"){
+    print("B wins!")
+    break
+  }else if(s[3]=="X"&&s[5]=="X"&&s[7]=="X"){
+    print("B wins!")
+    break
+  }else if(s[1]=="X"&&s[4]=="X"&&s[7]=="X"){
+    print("B wins!")
+    break
+  }else if(s[2]=="X"&&s[5]=="X"&&s[8]=="X"){
+    print("B wins!")
+  }else if(s[3]=="X"&&s[6]=="X"&&s[9]=="X"){
+    print("B wins!")
+    break
+  }else if(s[4]=="X"&&s[5]=="X"&&s[6]=="X"){
+    print("A wins!")
+    break
+  }else if(s[7]=="X"&&s[8]=="X"&&s[9]=="X"){
+    print("A wins!")
+    break
+  }else if(s[1]=="X"&&s[2]=="X"&&s[3]=="X"){
+    print("A wins!")
+    break
+  }else{
+    print("next round!")
+  }
   rou=rou+1
   tur=tur+1
+  if(rou==9){
+    print("End in a draw!")
+    break
+  }
 }
 
 
