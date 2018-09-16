@@ -4,22 +4,22 @@
 ########################################################### Task 1
 
 # 查看內建資料集: 鳶尾花(iris)資料集
-n=iris
+
 
 # 使用dim(), 回傳iris的列數與欄數
-dim(n)
+dim(iris)
 
 # 使用head() 回傳iris的前六列
-head(n)
+head(iris,6)
 
 # 使用tail() 回傳iris的後六列
-tail(n)
+tail(iris,6)
 
 # 使用str() 
-str(n)
+str(iris)
 
 # 使用summary() 查看iris敘述性統計、類別型資料概述。
-summary(n)
+summary(iris)
 
 ########################################################### Task 2
 
