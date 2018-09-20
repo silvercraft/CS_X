@@ -131,39 +131,75 @@ $(document).ready(function () {
 <p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
 <pre class="r"><code>library(rvest)</code></pre>
 <pre><code>## Loading required package: xml2</code></pre>
-<pre class="r"><code>page.source &lt;- read_html(&quot;https://www.reddit.com/&quot;)
+<pre class="r"><code>page.source &lt;- read_html(&quot;https://www.reddit.com/reddits/&quot;)
 
-kw &lt;- html_nodes(page.source, &quot;.bsfRLa&quot;)
+kw = html_nodes(page.source, &quot;.title&quot;)
 html_text(kw)</code></pre>
-<pre><code>##  [1] &quot;&quot;                      &quot;r/aww&quot;                
-##  [3] &quot;&quot;                      &quot;r/pics&quot;               
-##  [5] &quot;&quot;                      &quot;r/worldnews&quot;          
-##  [7] &quot;&quot;                      &quot;r/blackmagicfuckery&quot;  
-##  [9] &quot;&quot;                      &quot;r/WhitePeopleTwitter&quot; 
-## [11] &quot;&quot;                      &quot;r/news&quot;               
-## [13] &quot;&quot;                      &quot;r/BikiniBottomTwitter&quot;
-## [15] &quot;&quot;                      &quot;r/wholesomememes&quot;     
-## [17] &quot;&quot;                      &quot;r/MadeMeSmile&quot;        
-## [19] &quot;&quot;                      &quot;r/PoliticalHumor&quot;     
-## [21] &quot;&quot;                      &quot;r/funny&quot;              
-## [23] &quot;&quot;                      &quot;r/EarthPorn&quot;          
-## [25] &quot;&quot;                      &quot;r/Wellthatsucks&quot;      
-## [27] &quot;&quot;                      &quot;r/Tinder&quot;             
-## [29] &quot;&quot;                      &quot;r/BetterEveryLoop&quot;    
-## [31] &quot;&quot;                      &quot;r/AnimalsBeingDerps&quot;  
-## [33] &quot;&quot;                      &quot;r/CozyPlaces&quot;         
-## [35] &quot;&quot;                      &quot;r/BlackPeopleTwitter&quot; 
-## [37] &quot;&quot;                      &quot;r/aww&quot;                
-## [39] &quot;&quot;                      &quot;r/worldnews&quot;          
-## [41] &quot;&quot;                      &quot;r/The_Dennis&quot;         
-## [43] &quot;&quot;                      &quot;r/cursedimages&quot;       
-## [45] &quot;&quot;                      &quot;r/photoshopbattles&quot;   
-## [47] &quot;&quot;                      &quot;r/Whatcouldgowrong&quot;   
-## [49] &quot;&quot;                      &quot;r/sadcringe&quot;</code></pre>
-<pre class="r"><code># subreddit 
-news.title &lt;- html_nodes(page.source, &quot;.jbMYZJ&quot;)
-html_text(news.title)</code></pre>
-<pre><code>## character(0)</code></pre>
+<pre><code>##  [1] &quot;my subreddits&quot;                                                         
+##  [2] &quot;HOME FEED SUBREDDITS (0)&quot;                                              
+##  [3] &quot;multireddit of your subscriptions&quot;                                     
+##  [4] &quot;r/AskReddit: Ask Reddit...&quot;                                            
+##  [5] &quot;r/politics: Politics&quot;                                                  
+##  [6] &quot;r/The_Donald: The Donald - America First!&quot;                             
+##  [7] &quot;r/worldnews: World News&quot;                                               
+##  [8] &quot;r/nba: NBA&quot;                                                            
+##  [9] &quot;r/videos: /r/videos&quot;                                                   
+## [10] &quot;r/funny: funny&quot;                                                        
+## [11] &quot;r/todayilearned: Today I Learned (TIL)&quot;                                
+## [12] &quot;r/soccer: The back page of the internet&quot;                               
+## [13] &quot;r/CFB: The Internet's Tailgate&quot;                                        
+## [14] &quot;r/pics: Reddit Pics&quot;                                                   
+## [15] &quot;r/gaming: r/gaming&quot;                                                    
+## [16] &quot;r/movies: Movie News and Discussion&quot;                                   
+## [17] &quot;r/news: All news, US and international.&quot;                               
+## [18] &quot;r/gifs: .gifs - funny, animated gifs for your viewing pleasure&quot;        
+## [19] &quot;r/nfl: NFL: National Football League Discussion&quot;                       
+## [20] &quot;r/BlackPeopleTwitter: Black Twitter&quot;                                   
+## [21] &quot;r/mildlyinteresting: For photos that are, you know, mildly interesting&quot;
+## [22] &quot;r/leagueoflegends: League of Legends&quot;                                  
+## [23] &quot;r/aww: A subreddit for cute and cuddly pictures&quot;                       
+## [24] &quot;r/WTF: WTF?!&quot;                                                          
+## [25] &quot;r/Showerthoughts: Showerthoughts&quot;                                      
+## [26] &quot;r/relationships: Relationships&quot;                                        
+## [27] &quot;r/me_irl: selfies of the soul&quot;                                         
+## [28] &quot;r/technology: Technology&quot;                                              
+## [29] &quot;about&quot;                                                                 
+## [30] &quot;help&quot;                                                                  
+## [31] &quot;apps &amp; tools&quot;                                                          
+## [32] &quot;&lt;3&quot;</code></pre>
+<pre class="r"><code>html_attr(kw,&quot;href&quot;)</code></pre>
+<pre><code>##  [1] NA                                            
+##  [2] NA                                            
+##  [3] &quot;https://www.reddit.com/r/&quot;                   
+##  [4] &quot;https://www.reddit.com/r/AskReddit/&quot;         
+##  [5] &quot;https://www.reddit.com/r/politics/&quot;          
+##  [6] &quot;https://www.reddit.com/r/The_Donald/&quot;        
+##  [7] &quot;https://www.reddit.com/r/worldnews/&quot;         
+##  [8] &quot;https://www.reddit.com/r/nba/&quot;               
+##  [9] &quot;https://www.reddit.com/r/videos/&quot;            
+## [10] &quot;https://www.reddit.com/r/funny/&quot;             
+## [11] &quot;https://www.reddit.com/r/todayilearned/&quot;     
+## [12] &quot;https://www.reddit.com/r/soccer/&quot;            
+## [13] &quot;https://www.reddit.com/r/CFB/&quot;               
+## [14] &quot;https://www.reddit.com/r/pics/&quot;              
+## [15] &quot;https://www.reddit.com/r/gaming/&quot;            
+## [16] &quot;https://www.reddit.com/r/movies/&quot;            
+## [17] &quot;https://www.reddit.com/r/news/&quot;              
+## [18] &quot;https://www.reddit.com/r/gifs/&quot;              
+## [19] &quot;https://www.reddit.com/r/nfl/&quot;               
+## [20] &quot;https://www.reddit.com/r/BlackPeopleTwitter/&quot;
+## [21] &quot;https://www.reddit.com/r/mildlyinteresting/&quot; 
+## [22] &quot;https://www.reddit.com/r/leagueoflegends/&quot;   
+## [23] &quot;https://www.reddit.com/r/aww/&quot;               
+## [24] &quot;https://www.reddit.com/r/WTF/&quot;               
+## [25] &quot;https://www.reddit.com/r/Showerthoughts/&quot;    
+## [26] &quot;https://www.reddit.com/r/relationships/&quot;     
+## [27] &quot;https://www.reddit.com/r/me_irl/&quot;            
+## [28] &quot;https://www.reddit.com/r/technology/&quot;        
+## [29] NA                                            
+## [30] NA                                            
+## [31] NA                                            
+## [32] NA</code></pre>
 </div>
 
 
