@@ -1,5 +1,5 @@
 ---
-title: "hw_3"
+title: "The relationship of video's catagories and video count on Youtube"
 output: html_document
 ---
 
@@ -8,14 +8,15 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r }
-mydata = head(read.csv(file="https://research.google.com/youtube8m/csv/2/vocabulary.csv"),180)  # read csv file 
+mydata = head(read.csv(file="vocabulary.csv"),180)  # read csv file 
 library(ggplot2)
 ```
 
 ```{r chart1}
 theme_set(theme_classic())
 gg = ggplot(data=mydata, aes(x=Vertical1))+
-  geom_bar()+
+  geom_bar(aes(fill=Vertical1,colour = "white"))+
+  coord_flip()+
   labs(x="catagories", 
        title="Videos catagory counts")
 plot(gg)
@@ -35,11 +36,15 @@ plot(gg)
 ```
 ```{r chart 4}
 theme_set(theme_classic())
-gg = ggplot(data=mydata, aes(x=as.numeric(Index),y=log(as.numeric(TrainVideoCount))),color=Vertical1)+
-  geom_point()+
+gg = ggplot(data=mydata, aes(x=as.numeric(Index),y=log(TrainVideoCount)))+
+  geom_point(aes(col=Vertical1))+
   geom_smooth(color = "yellow",size = 1)+
   labs(x="index(1 to 180)",y="videocount in log" ,
        title="Videos catagory counts")
 plot(gg)
 ```
 
+```{r datas}
+mydata[1:180,c(1,2,6), drop=FALSE]
+print("source:https://research.google.com/youtube8m/")
+```
