@@ -1,8 +1,8 @@
 
-Homework for week 2
-Crawler target:reddit(a bit like PTT in America)
-This web crawler is able to fetch the name of the subreddits.
-Link: https://silvercraft.github.io/CS_X/week_2/hw_2/webcrawler.html
+Homework for week 4
+Using a webcrawler to fetch individual urls,read the text,and find out the frequency of the words to make a word cloud.
+Link:https://silvercraft.github.io/CS_X/week_4/hw_4/hw_4.html
+My computer couldn't seem to process too much webpage at onces,so I ended up choosing only the debut album.
+The report indicates the most frequent words used in the lyrics.
 
-OOXX game:
-I didn't use function so it looks a bit messy
+File constructed using the method mentioned in this page:http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know
