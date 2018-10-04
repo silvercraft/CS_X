@@ -1,0 +1,77 @@
+---
+title: "The wordcloud for Snoop dogg's debut album,Doggystyle"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+import library for wordcloud function
+
+```{r import library}
+library(rvest)
+library(tm)
+library(SnowballC)
+library(RColorBrewer)
+library(wordcloud)
+library(NLP)
+```
+
+
+Read the page first.This page contains song list for every Snoop Dogg songs.
+```{r read website}
+page.source <- read_html("https://www.azlyrics.com/s/snoopdogg.html")
+
+kw = html_nodes(page.source, "#8628+ .album b , #listAlbum a")
+n=html_attr(kw,"href")
+f=""
+```
+
+after fetching all the urls,replace all"../" with "https://www.azlyrics.com/" to enable second read_html.
+
+```{r replace}
+for(i in 2:18){
+
+page.source2 <- read_html(sub("../",replacement="https://www.azlyrics.com/",n[i]))
+
+kw2 = html_nodes(page.source2, "div:nth-child(10)")
+f=paste(c(f,html_text(kw2)))
+
+
+}
+```
+
+f now collect the strings we need.Next,We have to stem the text.
+```{r stem}
+
+
+docs <- Corpus(VectorSource(f))
+toSpace <- content_transformer(function(x, pattern) {
+  return (gsub(pattern, " ", x))}
+)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, stripWhitespace)
+docs <- tm_map(docs, removeWords, stopwords("english"))
+docs <- tm_map(docs, toSpace, "</i>")
+docs <- tm_map(docs, toSpace, "<br>")
+docs <- tm_map(docs, toSpace, "\r")
+docs <- tm_map(docs, toSpace, "\n")
+```
+
+Finally,we can generate a word cloud.
+```{r cloud}
+dtm <- TermDocumentMatrix(docs)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+head(d, 10)
+set.seed(1234)
+wordcloud(words = d$word, freq = d$freq, min.freq = 3,
+          max.words=200, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+
+```
+This shows that Snoop Dogg really likes the word 'nigga'.No word 'weed' surprisingly.
