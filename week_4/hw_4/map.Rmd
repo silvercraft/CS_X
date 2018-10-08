@@ -1,0 +1,61 @@
+---
+title: "Geographic analysis of ancient Greek temples"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Import neccessary libraries
+
+```{r library}
+library(leaflet)
+library(jsonlite)
+library(magrittr)
+library(rvest)
+
+```
+
+Begin webcrawling from wikipedia,and process the data we need into data frame.
+
+```{r read website}
+page.source <- read_html("https://en.wikipedia.org/wiki/List_of_Ancient_Greek_temples")
+
+kw = html_nodes(page.source, ".geo-dec")
+kx = html_nodes(page.source, "td~ td+ td span > a")
+n=html_text(kw)
+p=html_text(kx)
+n2=gsub("¢XN","",n)
+n3=gsub("¢XE","",n2)
+ff=strsplit(n3,split=" ",fixed=T)
+ffx = matrix(nrow=41) 
+ffy = matrix(nrow=41) 
+ffp = matrix(nrow=41)
+for(i in 1:41){
+  ffx[i]=as.numeric(ff[[i]][2])
+  ffy[i]=as.numeric(ff[[i]][1])
+}
+for(i in 1:42){
+  if(i<=18)
+    ffp[i]=p[2*i]
+  else
+    ffp[i]=p[2*i-1]
+}
+
+datam=data.frame(x = ffx[1:41],y = ffy[1:41],z=ffp[1:41])
+
+
+```
+
+Generate map.Markers show the name of the temples.
+
+```{r map}
+map <- leaflet(data=datam[1:41, ]) %>%
+  addTiles() %>%  
+  addMarkers(~x,~y,popup = ~as.character(z))%>% 
+  setView(18, 38, zoom = 5)
+map  
+
+```
+It shows that most temples are located in Greece(obviously),but some are also located in Italy and Turkey somehow.
