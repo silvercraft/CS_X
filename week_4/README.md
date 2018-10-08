@@ -1,4 +1,4 @@
-
+﻿
 Homework for week 4
 10/5:Using a webcrawler to fetch individual urls,read the text,and find out the frequency of the words to make a word cloud.
 
