@@ -1,15 +1,9 @@
 ﻿
-Homework for week 4
-10/5:Using a webcrawler to fetch individual urls,read the text,and find out the frequency of the words to make a word cloud.
+Homework for week 5
+10/15:Homework was finished.It's a research for Hitler's autography,"Mein Kampf".This assey will find out what he was thinking during his earlier life,showing his mindset.
 
-Link:https://silvercraft.github.io/CS_X/week_4/hw_4/hw_4.html
+Link:https://silvercraft.github.io/CS_X/week_5/hw_5/hw_52.html
 
-My computer couldn't seem to process too much webpage at onces,so I ended up choosing only the debut album.
-The report indicates the most frequent words used in the lyrics.
+One thing to be mentioned:I originally intended to analyse the entire book,but for some reasons I could only get the first half to work :(
 
-File constructed using the method mentioned in this page:http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know
-
-10/8:Using another webcrawler to fetch the data in this site:https://en.wikipedia.org/wiki/List_of_Ancient_Greek_temples
-and then made an interactive map that shows the temples' locations.
-
-Link:https://silvercraft.github.io/CS_X/week_4/hw_4/map.html
+Here's the source I used:http://www.hitler.org/writings/Mein_Kampf/
