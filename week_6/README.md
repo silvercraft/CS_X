@@ -1,9 +1,9 @@
 ﻿
-Homework for week 5
-10/15:Homework was finished.It's a research for Hitler's autography,"Mein Kampf".This assey will find out what he was thinking during his earlier life,showing his mindset.
+Homework for week 6/7/8
+11/13:Homework was finished.I continued to work on the research for Hitler.Although I don't fully understand how every aspect of analysis works,at least I have something to represent.
 
-Link:https://silvercraft.github.io/CS_X/week_5/hw_5/hw_52.html
+Shiny App Link:https://rngsilvercraft.shinyapps.io/My_Struggle/
 
-One thing to be mentioned:I originally intended to analyse the entire book,but for some reasons I could only get the first half to work :(
+I managed to fetch all the text in both episodes of Mein Kampf this time,so it will be a full analysis.
 
 Here's the source I used:http://www.hitler.org/writings/Mein_Kampf/
