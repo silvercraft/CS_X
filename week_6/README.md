@@ -1,6 +1,7 @@
 ﻿
 Homework for week 6/7/8
 11/13:Homework was finished.I continued to work on the research for Hitler.Although I don't fully understand how every aspect of analysis works,at least I have something to represent.
+Rmd Link:https://silvercraft.github.io/CS_X/week_6/hw_6/hw_62.html
 
 Shiny App Link:https://rngsilvercraft.shinyapps.io/My_Struggle/
 
