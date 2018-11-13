@@ -1,0 +1,181 @@
+---
+title: "Text Mining:Hitler's Mein Kampf(first half)"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load the libraries.
+
+```{r library}
+library(rvest)
+library(tm)
+library(SnowballC)
+library(RColorBrewer)
+library(dplyr)
+library(NLP)
+library(ggplot2)
+library(Matrix)
+library(wordcloud)
+library(htm2txt)
+```
+
+Crawling text from the website and deleting unneccesary words.
+
+```{r text}
+prefix = "http://www.hitler.org/writings/Mein_Kampf/mkv1ch0"
+prefix2 = "http://www.hitler.org/writings/Mein_Kampf/mkv1ch"
+prefix3 = "http://www.hitler.org/writings/Mein_Kampf/mkv2ch0"
+prefix4 = "http://www.hitler.org/writings/Mein_Kampf/mkv2ch"
+f=""
+f2=""
+data <- list()
+for( id in 1:9 )
+{
+  url  <- paste0( prefix, as.character(id), ".html" )
+  page.source2 <- read_html(url)
+  kw2 = html_nodes(page.source2, "blockquote")
+  f=paste(c(f,html_text(kw2)))
+  
+  
+}
+for( id in 10:12 )
+{
+  url  <- paste0( prefix2, as.character(id), ".html" )
+  page.source2 <- read_html(url)
+  kw2 = html_nodes(page.source2, "blockquote")
+  f=paste(c(f,html_text(kw2)))
+  
+}
+for( id in 1:9 )
+{
+  url  <- paste0( prefix3, as.character(id), ".html" )
+  kw2 = gettxt(url)
+  f=paste(c(f,kw2))
+  
+}
+for( id in 10:13 )
+{
+  url  <- paste0( prefix4, as.character(id), ".html" )
+  kw2 = gettxt(url)
+  f=paste(c(f,kw2))
+  
+}
+for( id in 14:15 )
+{
+  url  <- paste0( prefix4, as.character(id), ".html" )
+  page.source2 <- read_html(url)
+  kw2 = html_nodes(page.source2, "blockquote")
+  f=paste(c(f,html_text(kw2)))
+  
+}
+docs <- Corpus(VectorSource(f))
+toSpace <- content_transformer(function(x, pattern) {
+  return (gsub(pattern, " ", x))}
+)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, stripWhitespace)
+docs <- tm_map(docs, removeWords, stopwords("english"))
+docs <- tm_map(docs, removeWords, "even")
+docs <- tm_map(docs, removeWords, "also")
+docs <- tm_map(docs, removeWords, "will")
+docs <- tm_map(docs, removeWords, "take")
+docs <- tm_map(docs, removeWords, "made")
+docs <- tm_map(docs, removeWords, "means")
+docs <- tm_map(docs, removeWords, "may")
+docs <- tm_map(docs, removeWords, "since")
+docs <- tm_map(docs, removeWords, "thus")
+docs <- tm_map(docs, removeWords, "always")
+docs <- tm_map(docs, removeWords, "make")
+docs <- tm_map(docs, removeWords, "can")
+docs <- tm_map(docs, removeWords, "must")
+docs <- tm_map(docs, removeWords, "\n")
+docs <- tm_map(docs, removeWords, "</i>")
+docs <- tm_map(docs, removeWords, "<br>")
+docs <- tm_map(docs, removeWords, "\r")
+```
+
+```{r freq}
+tdm <- TermDocumentMatrix(docs)
+freq=rowSums(as.matrix(tdm))
+tail(sort(freq),n=10)
+high.freq=tail(sort(freq),n=10)
+hfp.df=as.data.frame(sort(high.freq))
+hfp.df$names <- rownames(hfp.df) 
+```
+
+```{r plot}
+ggplot(hfp.df, aes(reorder(names,high.freq), high.freq)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+
+```
+
+```{r cloud}
+m1 <- as.matrix(tdm)
+v <- sort(rowSums(m1), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+wordcloud(d$word, d$freq, min.freq = 10,max.words = 50, random.order = F, ordered.colors = F, 
+    colors = rainbow(length(row.names(m1))))
+high.freq=tail(sort(freq),n=100)
+hfp.df=as.data.frame(sort(high.freq))
+hfp.df$names <- rownames(hfp.df) 
+```
+
+```{r tfidf}
+# tf-idf computation
+tf <- apply(tdm, 2, sum) # term frequency
+idf <- function(word_doc){ log2( (length(word_doc)+1) / nnzero(word_doc) ) }
+idf <- apply(tdm, 1, idf)
+doc.tfidf <- as.matrix(tdm)
+for(i in 1:nrow(tdm)){
+    for(j in 1:ncol(tdm)){
+        doc.tfidf[i,j] <- (doc.tfidf[i,j] / tf[j]) * idf[i]
+    }
+}
+```
+13,16,18,20,22,24,26,28,30,32,34,36,38,40
+```{r cadj}
+library(ggfortify)
+doc.tfidf<-doc.tfidf[,-c(1,13)] 
+include_list <- hfp.df$names
+newdoc=doc.tfidf[include_list, ]
+colnames(newdoc) <- c("chapter 1", "chapter 2","chapter 3","chapter 4","chapter 5","chapter 6","chapter 7","chapter 8","chapter 9","chapter 10","chapter 11","chapter 12","chapter 13","chapter 14","chapter 15","chapter 16","chapter 17","chapter 18","chapter 19","chapter 20","chapter 21","chapter 22","chapter 23","chapter 24","chapter 25","chapter 26","chapter 27")
+```
+
+```{r boot}
+pcat = prcomp(t(newdoc))
+autoplot(pcat$x,data = newdoc, shape = FALSE, label.size = 3)
+comp <- data.frame(pcat$x[,1:4])
+library(rgl)
+# Multi 3D plot
+plot3d(comp$PC1, comp$PC2, comp$PC3)
+plot3d(comp$PC1, comp$PC3, comp$PC4)
+kkk=3
+set.seed(1)
+km=kmeans(comp, kkk,nstart=25, iter.max=1000)
+plot(comp, col=km$cluster, pch=16)
+plot3d(comp$PC1, comp$PC2, comp$PC3, col=km$cluster)
+plot3d(comp$PC1, comp$PC3, comp$PC4, col=km$cluster)
+autoplot(km, data = pcat, label = TRUE, label.size = 3)
+```
+
+```{r tfidfcombine}
+head(sort(doc.tfidf[,1],decreasing = TRUE),10)
+
+    nn2=data.frame(tfidf=head(sort(doc.tfidf[,1],decreasing = TRUE),10))
+    nn2$names<- rownames(nn2) 
+    print(ggplot(nn2, aes(names,tfidf)) +
+    geom_bar(stat="identity") + coord_flip() + 
+    xlab("Terms") + ylab("Frequency") +
+  ggtitle(paste("Chapter ",1)) )
+
+  
+  
+```
+

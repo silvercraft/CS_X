@@ -1,0 +1,167 @@
+---
+title: "-"
+author: "-"
+date: "-"
+output: html_document
+---
+
+
+```{r}
+##引入所需要的套件包
+rm(list=ls(all.names = TRUE))
+library(rvest)
+library(bitops)
+library(httr)
+library(RCurl)
+library(XML)
+library(tm)
+library(NLP)
+library(tmcn)
+library(jiebaRD)
+library(jiebaR)
+library(RColorBrewer)
+library(wordcloud)
+library(forcats)
+library(ggplot2)
+```
+
+```{r read website}
+page.source <- read_html("https://www.google.com.tw/search?q=%E5%8C%97%E5%B8%82%E8%BE%AF%E8%AB%96+ptt+site:www.ptt.cc&sa=X&ved=2ahUKEwjgyNXE-czeAhXHVbwKHZvjDLMQrQIoBDACegQIAxAL&biw=1360&bih=631")
+
+kw = html_nodes(page.source, ".LC20lb")
+n=html_attr(kw,"href")
+f=""
+```
+
+after fetching all the urls,replace all"../" with "https://www.azlyrics.com/" to enable second read_html.
+
+```{r rep}
+for(i in 2:18){
+
+page.source2 <- read_html(n[i])
+
+kw2 = html_nodes(page.source2, "#main-content")
+f=paste(c(f,html_text(kw2)))
+
+
+}
+```
+for(i in 1:20)
+ page.source2 <- read_html(n[i])
+ kw2 = html_nodes(page.source2, "hr+ div")
+ if(i<10)
+ name <- paste0('./DATA/0', i, ".txt")
+ if(i>10)
+ name <- paste0('./DATA/', i, ".txt")
+ write(html_text(kw2), name, append = TRUE)
+
+
+```{r replace}
+
+
+
+
+toSpace <- content_transformer(function(x, pattern) {
+  return (gsub(pattern, " ", x))
+}
+)
+d.corpus <- Corpus(VectorSource(f))
+d.corpus <- tm_map(d.corpus, removePunctuation)
+d.corpus <- tm_map(d.corpus, removeNumbers)
+d.corpus <- tm_map(d.corpus, function(word) {
+    gsub("[A-Za-z0-9]", "", word)
+})
+```
+
+
+```{r}
+#詞彙切割
+jieba_tokenizer = function(d)
+{
+  unlist( segment(d[[1]], mixseg) )
+}
+seg = lapply(d.corpus, jieba_tokenizer)
+count_token = function(d)
+{
+  as.data.frame(table(d))
+}
+tokens = lapply(seg, count_token)
+```
+```{r}
+n = length(seg)
+TDM = tokens[[1]]
+names(seg)
+colNames <- names(seg)
+colNames <- gsub(".txt", "", colNames)
+for( id in c(2:n) )
+{
+  TDM = merge(TDM, tokens[[id]], by="d", all = TRUE)
+  names(TDM) = c('d', colNames[1:id])
+}
+TDM[is.na(TDM)] <- 0
+library(knitr)
+kable(head(TDM))
+kable(tail(TDM))
+```
+
+```{r}
+
+tf <- apply(as.matrix(TDM[,2:(n+1)]), 2, sum)
+library(Matrix)
+idfCal <- function(word_doc)
+{ 
+  log2( n / nnzero(word_doc) ) 
+}
+idf <- apply(as.matrix(TDM[,2:(n+1)]), 1, idfCal)
+doc.tfidf <- TDM
+head(doc.tfidf)
+#Tf-Idf
+tempY = matrix(rep(c(as.matrix(tf)), each = length(idf)), nrow = length(idf))
+tempX = matrix(rep(c(as.matrix(idf)), each = length(tf)), ncol = length(tf), byrow = TRUE)
+doc.tfidf[,2:(n+1)] <- (doc.tfidf[,2:(n+1)] / tempY) * tempX
+stopLine = rowSums(doc.tfidf[,2:(n+1)])
+delID = which(stopLine == 0)
+```
+```{r}
+TopWords = data.frame()
+for( id in c(1:n) )
+{
+  dayMax = order(doc.tfidf[,id+1], decreasing = TRUE)
+  showResult = t(as.data.frame(doc.tfidf[dayMax[1:20],1]))
+  TopWords = rbind(TopWords, showResult)
+}
+rownames(TopWords) = colnames(doc.tfidf)[2:(n+1)]
+TopWords = droplevels(TopWords)
+kable(TopWords)
+```
+
+
+```{r}
+TDM$d = as.character(TDM$d)
+AllTop = as.data.frame( table(as.matrix(TopWords)) )
+AllTop = AllTop[order(AllTop$Freq, decreasing = TRUE),]
+kable(head(AllTop))
+```
+
+
+
+```{r}
+filenames = as.array(paste0("./DATA/",colnames(doc.tfidf)[2:(n+1)],".txt"))
+sizeResult = apply(filenames, 1, file.size) / 1024
+showSize = data.frame(colnames(doc.tfidf)[2:(n+1)], sizeResult)
+names(showSize) = c("topic", "size_KB")
+showSize$topic <- fct_inorder(showSize$topic)
+ggplot(showSize, aes(x = topic, y = size_KB)) + geom_bar(stat="identity")
+```
+
+
+```{r boot}
+doc.tfidf$d <- 0
+pcat_tag = prcomp(doc.tfidf,center = F, scale = F)
+plot(pcat_tag)
+
+kme=kmeans(doc.tfidf, centers = 3, nstart = 10)
+library(useful)
+plot(kme,data = doc.tfidf)      # 框架型態
+
+```
