@@ -98,7 +98,7 @@ docs <- tm_map(docs, removeWords, "</i>")
 docs <- tm_map(docs, removeWords, "<br>")
 docs <- tm_map(docs, removeWords, "\r")
 ```
-
+crn
 ```{r freq}
 tdm <- TermDocumentMatrix(docs)
 freq=rowSums(as.matrix(tdm))
